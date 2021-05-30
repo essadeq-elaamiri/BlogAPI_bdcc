@@ -4,9 +4,12 @@ module.exports = {
   getAllUsers() {
     return User.findAll();
   },
-  getUsers(offset = 0, limit = 10) {
+  getUsers(offset = 0, limit = 5) {
     // Skip 0 instances and fetch the 10 after that
     return User.findAll({ offset: offset, limit: limit });
+  },
+  getUsersAndCount(offset = 0, limit = 5) {
+    return User.findAndCountAll({ offset: offset, limit: limit });
   },
   getAdmins() {
     return User.findAll({
@@ -44,7 +47,8 @@ module.exports = {
     });
   },
   addUser(user) {
-    User.create(user);
+    // User.create(user);
+    return User.create(user);
   },
   updateUser(id, updates) {
     User.update(updates, {
