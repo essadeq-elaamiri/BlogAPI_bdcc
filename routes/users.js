@@ -32,14 +32,18 @@ router.post("/", async function (req, res, next) {
 
 router.put("/", async function (req, res, next) {
   var user = req.body;
-  await userRepo.updateUser(user.id, user);
+  var result = await userRepo.updateUser(user.id, user);
   //res.json(data);
-  res.json({ message: "updated!" });
+  res.json(
+    result[0] == 1
+      ? { message: "les modification ont été enrégistrées!" }
+      : { message: "les modification n'ont pas été enrégistrées!" }
+  );
 });
 
 router.delete("/:id", async function (req, res, next) {
   await userRepo.deleteUser(req.params.id);
-  //res.json(data);
+  //res.json(result);
   res.json({ message: "deleted!" });
 });
 module.exports = router;

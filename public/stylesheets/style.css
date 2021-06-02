@@ -1,12 +1,12 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
+/*
 main .users_table {
   -webkit-box-shadow: 0 0 10px 0 #8f8f8f;
   box-shadow: 0 0 10px 0 #8f8f8f;
 }
-
+*/
 main h1,
 main button {
   margin-top: 15px;
@@ -21,4 +21,13 @@ main button {
   padding-right: 5px;
   border-radius: 2px;
   border: 1px solid #198754;
+}
+.error_inserting {
+  color: #ad0e03;
+  text-align: center;
+  background-color: #b45f59;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 2px;
+  border: 1px solid #871919;
 }

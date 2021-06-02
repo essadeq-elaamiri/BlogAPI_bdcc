@@ -51,14 +51,14 @@ module.exports = {
     return User.create(user);
   },
   updateUser(id, updates) {
-    User.update(updates, {
+    return User.update(updates, {
       where: {
         id: id,
       },
     });
   },
   deleteUser(id) {
-    User.destroy({
+    return User.destroy({
       where: {
         id: id,
       },
