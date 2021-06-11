@@ -7,10 +7,13 @@ export default class extends View_c {
   }
 
   async getHTMLContent() {
-    let link = "http://localhost:3000/articles?offset=0&limit=30";
-    let articles = await getArticlesData(link).then((data) => data);
-    var HTMLContent;
-    var articlesHTML = await renderHtml(articles.rows);
+    let ArticlesLink = "http://localhost:3000/articles?offset=0&limit=130";
+    let TagsLink = "http://localhost:3000/tags";
+    let articles = await getArticlesData(ArticlesLink).then((data) => data);
+    let tags = await getTagsData(TagsLink).then((data) => data);
+    let HTMLContent;
+    let articlesHTML = await renderArticlesHtml(articles.rows);
+    let tagsHTML = await renderTagsHtml(tags);
 
     HTMLContent = `
     <!-- Page header with logo and tagline-->
@@ -43,44 +46,9 @@ export default class extends View_c {
                         <div class="card-header">Tags</div>
                         <div class="card-body">
                             <div class="row">
-                                <!-- Put tags here -->
-                                <div class="col">
-                                  <a data-link href="#">
-                                    <span class="badge rounded-pill bg-secondary p-2 mb-3">Secondary</span>
-                                  </a>
-                                </div>
-
-                                <div class="col">
-                                  <a data-link href="#">
-                                    <span class="badge rounded-pill bg-secondary p-2 mb-3">Secondary</span>
-                                  </a>
-                                </div>
-
-                                <div class="col">
-                                  <a data-link href="#">
-                                    <span class="badge rounded-pill bg-secondary p-2 mb-3">Secondary</span>
-                                  </a>
-                                </div>
-
-
-                                <div class="col">
-                                  <a data-link href="#">
-                                    <span class="badge rounded-pill bg-secondary p-2 mb-3">Secondary</span>
-                                  </a>
-                                </div>
-
-                                <div class="col">
-                                  <a data-link href="#">
-                                    <span class="badge rounded-pill bg-secondary p-2 mb-3">Secondary</span>
-                                  </a>
-                                </div>
-
-
-                                <div class="col">
-                                  <a data-link href="#">
-                                    <span class="badge rounded-pill bg-secondary p-2">Secondary</span>
-                                  </a>
-                                </div>
+                                <!-- Put tags here **** -->
+                                ${tagsHTML}
+                                <!-- end tags here -->
                             </div>
                         </div>
                     </div>
@@ -105,7 +73,10 @@ async function getArticlesData(link) {
   let result = await fetch(link);
   return result.json();
 }
-
+async function getTagsData(link) {
+  let result = await fetch(link);
+  return result.json();
+}
 function renderArticle(article) {
   return `
     <div class="col-4">
@@ -117,17 +88,36 @@ function renderArticle(article) {
             <div class="small text-muted">${article.updatedAt}</div>
             <h2 class="card-title h4">${article.title}</h2>
             <p class="card-text">${article.content.substring(0, 130)}</p>
-            <a class="btn btn-primary" href="#!">Read more →</a>
+            <button class="btn btn-primary readArticleBtn" data-articleLink=${
+              article.id
+            } data-link >Read more →</button>
           </div>
       </div>
     </div>
+
     `;
 }
 
-async function renderHtml(articlesArray) {
+async function renderArticlesHtml(articlesArray) {
   let articles = "";
   articlesArray.forEach((article) => {
     articles += renderArticle(article);
   });
   return articles;
+}
+//renderTagsHtml
+function renderTags(tag) {
+  return `<div class="col">
+            <a data-link data-tagId="${tag.id}" href="#">
+              <span class="badge rounded-pill bg-secondary p-2 mb-3">${tag.name}</span>
+            </a>
+          </div>
+          `;
+}
+async function renderTagsHtml(tagsArray) {
+  let tags = "";
+  tagsArray.forEach((tag) => {
+    tags += renderTags(tag);
+  });
+  return tags;
 }
