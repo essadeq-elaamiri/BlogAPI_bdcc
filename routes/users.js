@@ -18,6 +18,9 @@ router.get("/", async function (req, res, next) {
 });
 router.get("/:id", async function (req, res, next) {
   var data = await userRepo.getUser(req.params.id);
+  if (data.length == 0) {
+    data = { message: "No user found !" };
+  }
   res.json(data);
   //res.send(data);
 });

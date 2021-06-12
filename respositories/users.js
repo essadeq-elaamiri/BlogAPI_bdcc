@@ -2,7 +2,7 @@ const { User } = require("../models");
 
 module.exports = {
   getAllUsers() {
-    return User.findAll();
+    return User.findAll(); //ORM =
   },
   getUsers(offset = 0, limit = 5) {
     // Skip 0 instances and fetch the 10 after that

@@ -27,12 +27,13 @@ $ asserts position at the end of the string
   );
 };
 */
+var ARTICLE_ID;
 
 const navigateTo = (url) => {
   history.pushState(null, null, url);
   router();
 };
-const router = async (articleId) => {
+const router = async () => {
   const routes = [
     {
       path: "/",
@@ -73,7 +74,7 @@ const router = async (articleId) => {
   }
 
   //PASS parameters
-  const view = new match.route.view(articleId);
+  const view = new match.route.view(ARTICLE_ID);
   //injectiong the html
   document.querySelector("#main_app").innerHTML = await view.getHTMLContent();
 };
@@ -89,11 +90,11 @@ document.addEventListener("DOMContentLoaded", () => {
       navigateTo(e.target.href);
     }
     if (e.target.matches(".readArticleBtn")) {
-      article_id = e.target.getAttribute("data-articleLink");
-      //console.log("Hi " + article_id);
+      article_id = e.target.getAttribute("data-articleId");
+      ARTICLE_ID = article_id;
       e.preventDefault();
-      navigateTo("/article");
+      navigateTo(e.target.href);
     }
   });
-  router(article_id);
+  router();
 });

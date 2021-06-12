@@ -25,6 +25,13 @@ module.exports = {
       },
     });
   },
+  getArticlesByUserID(userId) {
+    return Article.findAll({
+      where: {
+        UserId: userId,
+      },
+    });
+  },
   addArticle(article) {
     // User.create(user);
     return Article.create(article);

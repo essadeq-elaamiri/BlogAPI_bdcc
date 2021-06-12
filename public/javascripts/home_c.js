@@ -85,12 +85,14 @@ function renderArticle(article) {
           article.id
         }" alt="Image : ${article.title}" /></a>
           <div class="card-body">
-            <div class="small text-muted">${article.updatedAt}</div>
+            <div class="small text-muted">${new Date(
+              article.createdAt
+            ).toLocaleDateString()}</div>
             <h2 class="card-title h4">${article.title}</h2>
             <p class="card-text">${article.content.substring(0, 130)}</p>
-            <button class="btn btn-primary readArticleBtn" data-articleLink=${
+            <a class="btn btn-primary readArticleBtn" data-articleId=${
               article.id
-            } data-link >Read more →</button>
+            } data-link href="/article">Read more →</a>
           </div>
       </div>
     </div>

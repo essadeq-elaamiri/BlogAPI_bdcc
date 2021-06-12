@@ -21,6 +21,11 @@ router.get("/:id", async function (req, res, next) {
   res.json(data);
   //res.send(data);
 });
+router.get("/articlesByUser/:id", async function (req, res, next) {
+  var data = await articleRepo.getArticlesByUserID(req.params.id);
+  res.json(data);
+  //res.send(data);
+});
 router.post("/", async function (req, res, next) {
   var article = req.body;
   //var res_data =
