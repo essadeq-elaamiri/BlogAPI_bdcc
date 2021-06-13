@@ -25,6 +25,13 @@ module.exports = {
       },
     });
   },
+  getCommentsCountByArticle(articleId) {
+    return Comment.count({
+      where: {
+        ArticleId: articleId,
+      },
+    });
+  },
   addComment(comment) {
     // User.create(user);
     return Comment.create(comment);

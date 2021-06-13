@@ -18,6 +18,17 @@ router.get("/commentByArticle/:id", async function (req, res, next) {
   res.json(data);
   //res.send(data);
 });
+
+router.get("/commentsCount/:id", async function (req, res, next) {
+  /*
+  (permettra d’exécuter une requête Group By article.id et d’afficher les titres des
+  l’articles et le nombre de commentaires pour chaque article.
+  */
+  var data = await commentRepo.getCommentsCountByArticle(req.params.id);
+  res.json(data);
+  //res.send(data);
+});
+
 router.post("/", async function (req, res, next) {
   var comment = req.body;
   const addedComment = await commentRepo.addComment(comment);

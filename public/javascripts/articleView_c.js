@@ -1,4 +1,5 @@
 import View_c from "./view_c.js";
+import { navigateTo } from "./main.js";
 
 export default class extends View_c {
   constructor(id) {
@@ -14,6 +15,7 @@ export default class extends View_c {
       (data) => data
     );
     let comments = await this.renderCommentsHtml(commentsArray);
+    let commentsCount = await this.getCommentsCount(this.articleId);
     return `
     <div class="container">
       <article class="mt-5 mb-5 pt-5 pb-5 border-bottom">
@@ -38,13 +40,26 @@ export default class extends View_c {
         </article>
         <!-- ********************** -->
         <section class="comments mb-5">
-          <h3>Comments</h3>
+          <h3>Comments <span class="badge bg-warning text-dark">${commentsCount}</span> </h3>
+          <div class="mb-2">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="commentIn" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="addCmnt_btn">
+                <button class="btn btn-outline-secondary" type="button" id="addCmnt_btn" data-articleID="${
+                  this.articleId
+                }">Comment</button>
+              </div>
+          </div>
           ${comments}
         </section>
     </div>
           `;
   }
 
+  async getCommentsCount(articleId) {
+    let countLink = `http://localhost:3000/comments/commentsCount/${articleId}`;
+    let result = await fetch(countLink);
+    return result.json();
+  }
   async getArticle(articleId) {
     let articleLink = `http://localhost:3000/articles/${articleId}`;
     let result = await fetch(articleLink);
@@ -81,7 +96,9 @@ export default class extends View_c {
           <!--<h5 class="card-title">Card title</h5>-->
           <h6 class="card-subtitle mb-2 text-muted">${new Date(
             comment.createdAt
-          ).toLocaleDateString()}</h6>
+          ).toLocaleDateString()} at ${new Date(
+      comment.createdAt
+    ).getHours()}:${new Date(comment.createdAt).getMinutes()}</h6>
           <p class="card-text">${comment.content}</p>
           <a href="#" class="card-link btn btn-outline-success" data-link >
             <i class="fas fa-thumbs-up"></i>
@@ -94,3 +111,36 @@ export default class extends View_c {
     `;
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.addEventListener("click", (e) => {
+    if (e.target.matches("#addCmnt_btn")) {
+      /*
+      id="commentIn" data-articleID
+      */
+      let comment = document.querySelector("#commentIn").value;
+      let artID = e.target.getAttribute("data-articleID");
+
+      if (!comment || !artID || comment.length == 0)
+        alert("Comment can not be empty !");
+      else {
+        let commentToSend = { content: comment, ArticleId: artID };
+        let link = "http://localhost:3000/comments";
+        fetch(link, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(commentToSend),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            alert("Comment Added !");
+            navigateTo();
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+  });
+});

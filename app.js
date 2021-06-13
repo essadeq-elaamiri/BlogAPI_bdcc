@@ -23,4 +23,9 @@ app.use("/articles", articlesRouter);
 app.use("/tags", tagsRouter);
 app.use("/comments", commentsRouter);
 
+app.all("*", function (req, res, next) {
+  res.redirect("/");
+  next(); // pass control to the next handler
+});
+
 module.exports = app;

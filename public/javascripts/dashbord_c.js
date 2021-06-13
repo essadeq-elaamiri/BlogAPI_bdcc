@@ -1,5 +1,5 @@
 import View_c from "./view_c.js";
-
+import { navigateTo } from "./main.js";
 export default class extends View_c {
   constructor() {
     super();
@@ -51,9 +51,9 @@ function renderSingleUserRow(user) {
                 <i class="fas fa-edit"></i>
               </button>
             
-              <button type="button" class="btn btn-danger" data-userId=${
+              <button type="button" class="btn btn-danger delete_btn" data-userId=${
                 user.id
-              } class="delete_btn" onclick='deleteUser(this)'>
+              }  >
               <i class="fas fa-user-minus"></i>
               </button>
               ${renderModal(user)}
@@ -61,6 +61,25 @@ function renderSingleUserRow(user) {
         </tr>
           `;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.addEventListener("click", (e) => {
+    if (e.target.matches(".delete_btn")) {
+      e.preventDefault();
+      deleteUser(e.target);
+    }
+    if (e.target.matches("#add_btn")) {
+      e.preventDefault();
+      addUser();
+    }
+    if (e.target.matches(".edit_btn")) {
+      e.preventDefault();
+      let userId = e.target.getAttribute("data-userId");
+      // console.log(userId);
+      editUserDB(userId);
+    }
+  });
+});
 
 function renderModal(user) {
   return `
@@ -157,9 +176,9 @@ function renderModal(user) {
           >
             Fermer
           </button>
-          <button type="button" class="btn btn-primary" id="edit_btn-${
+          <button type="button" class="btn btn-primary edit_btn" data-userId="${
             user.id
-          }" onclick='editUserDB(${user.id})'>
+          }">
             Enregistrer
           </button>
         </div>
@@ -274,7 +293,7 @@ async function renderHtmlContent(records, userCount) {
                   >
                     Fermer
                   </button>
-                  <button type="button" class="btn btn-primary" id="add_btn" onclick="addUser()">
+                  <button type="button" class="btn btn-primary" id="add_btn">
                     Ajouter
                   </button>
                 </div>
@@ -423,7 +442,8 @@ function addUser_toDb(link, user) {
         "#close_and_reload_btn"
       );
       close_and_reload_btn.click();
-      getDataAndRender("http://localhost:3000/users");
+      // getDataAndRender("http://localhost:3000/users");
+      navigateTo();
       sendAlert(1, "L'utisateur a été ajouté !", 2000);
     })
     .catch((err) => {
@@ -464,7 +484,8 @@ function editUserDB(userId) {
         //close the modal
         delete_btn.click();
         sendAlert(1, result.message, 2000);
-        getDataAndRender(link);
+        // getDataAndRender(link);
+        navigateTo();
       })
       .catch((err) => {
         console.log(err);
@@ -489,7 +510,8 @@ function deleteUser(event) {
   if (confirmed) {
     deleteUserFromDB(userId)
       .then((rs) => {
-        getDataAndRender("http://localhost:3000/users");
+        // getDataAndRender("http://localhost:3000/users");
+        navigateTo();
         sendAlert(1, "L'utisateur a été supprimé !", 2000);
       })
       .catch((err) => {
